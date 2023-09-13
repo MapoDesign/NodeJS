@@ -23,15 +23,23 @@ app.get('/service',(req,res)=>{
 
 app.get('/pokemon',(req,res)=>{
     const listaPokemon = pokedex.map((pokemon)=>{
-        return pokemon
+        const {id,name,image} = pokemon
+        return {id,name,image}
     })
     res.json(listaPokemon)
 })
 
-app.get('/pokemon/1', (req,res)=>{
+app.get('/pokemon/:id', (req,res)=>{
     console.log(req.params);
-    const pokemon = pokedex.find((pokemon)=> {pokemon.id === '1'})
-    res.json(pokemon)
+    const {id} = req.params
+    // const pokemonScelto = pokedex.find((pokemon)=> pokemon.id === id) // Se id è stinga
+    const pokemonScelto = pokedex.find((pokemon)=> pokemon.id === Number(id)) // Se id è numero
+
+    if (!pokemonScelto) {
+        return res.status(404).json({messaggio:"Pokemon non trovato",code:404})
+    }
+
+    res.json(pokemonScelto)
 })
 
 app.all('*',(req,res)=>{
