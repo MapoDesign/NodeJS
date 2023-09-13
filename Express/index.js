@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const pokedex = require('./pokedex.json')
+const {pokedex} = require('./pokedex')
 
 app.use(express.static('public'))
 
