@@ -23,13 +23,13 @@ app.get('/service',(req,res)=>{
 
 app.get('/pokemon',(req,res)=>{
     const listaPokemon = pokedex.map((pokemon)=>{
-        const {id,name,image} = pokemon
-        return {id,name,image}
+        const {id,name,image,type} = pokemon
+        return {id,name,image,type}
     })
     res.json(listaPokemon)
 })
 
-app.get('/pokemon/:id', (req,res)=>{
+/* app.get('/pokemon/:id', (req,res)=>{
     console.log(req.params);
     const {id} = req.params
     // const pokemonScelto = pokedex.find((pokemon)=> pokemon.id === id) // Se id è stinga
@@ -40,6 +40,30 @@ app.get('/pokemon/:id', (req,res)=>{
     }
 
     res.json(pokemonScelto)
+}) */
+
+app.get('/pokemon/search',(req,res)=>{
+    console.log(req.query);
+    const {query,limit} = req.query;
+    let pokemonFiltrati = [...pokedex]
+
+    // Per ricercare dal nome
+    if (query) {
+        pokemonFiltrati = pokemonFiltrati.filter((pokemon)=>{
+            return pokemon.name.english.startsWith(query)
+        })
+    }
+
+    // Per gestire il limite della ricerca
+    if (limit) {
+        pokemonFiltrati = pokemonFiltrati.slice(0,Number(limit))
+    }
+
+    if (pokemonFiltrati.length < 1) {
+        return res.status(200).json({success: true, data:[]})
+    }
+
+    res.status(200).json(pokemonFiltrati)
 })
 
 app.all('*',(req,res)=>{
