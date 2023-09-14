@@ -6,7 +6,7 @@ app.use(express.static('public'))
 
 const middlewareTest = require('./middleware')
 
-app.use(middlewareTest)
+app.use('/pokemon',middlewareTest)
 
 app.get('/middleware', (req,res)=>{
     res.send('Home')
