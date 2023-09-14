@@ -4,7 +4,13 @@ const {pokedex} = require('./pokedex')
 
 app.use(express.static('public'))
 
-app.get('/', function (req, res) {
+const middlewareTest = require('./middleware')
+
+app.get('/middleware', middlewareTest,(req,res)=>{
+    res.send('Home')
+})
+
+app.get('/', (req, res) => {
     res.sendFile('index.html', {root: __dirname + '/public'})
 
 })
