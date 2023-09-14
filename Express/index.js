@@ -6,7 +6,9 @@ app.use(express.static('public'))
 
 const middlewareTest = require('./middleware')
 
-app.get('/middleware', middlewareTest,(req,res)=>{
+app.use(middlewareTest)
+
+app.get('/middleware', (req,res)=>{
     res.send('Home')
 })
 
@@ -35,7 +37,7 @@ app.get('/pokemon',(req,res)=>{
     res.json(listaPokemon)
 })
 
-/* app.get('/pokemon/:id', (req,res)=>{
+app.get('/pokemon/:id', (req,res)=>{
     console.log(req.params);
     const {id} = req.params
     // const pokemonScelto = pokedex.find((pokemon)=> pokemon.id === id) // Se id è stinga
@@ -46,7 +48,7 @@ app.get('/pokemon',(req,res)=>{
     }
 
     res.json(pokemonScelto)
-}) */
+})
 
 app.get('/pokemon/search',(req,res)=>{
     console.log(req.query);
