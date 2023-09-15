@@ -1,12 +1,13 @@
 const express = require('express')
 const app = express()
 const {pokedex} = require('./pokedex')
+const {users} = require('./users')
 
 app.use(express.static('public'))
 
 const middlewareTest = require('./middleware')
 
-app.use('/pokemon',middlewareTest)
+app.use('/pokemon',middlewareTest) // mette il middleware solo alla categoria pokemon
 
 app.get('/middleware', (req,res)=>{
     res.send('Home')
@@ -27,6 +28,10 @@ app.get('/contact',(req,res)=>{
 
 app.get('/service',(req,res)=>{
     res.sendFile('service.html', {root: __dirname + '/public'})
+})
+
+app.get('/users',(req,res)=>{
+    res.sendFile('users.html', {root: __dirname + '/public'})
 })
 
 app.get('/pokemon',(req,res)=>{
@@ -72,6 +77,40 @@ app.get('/pokemon/search',(req,res)=>{
     }
 
     res.status(200).json(pokemonFiltrati)
+})
+
+// Per chiamate REST - API
+app.use(express.json())
+
+app.get('/api/users', (req,res) => {
+    res.status(200).json({data:users});
+})
+
+app.get('/api/users/:id', (req,res) => {
+    const {id} = req.params;
+    const userSelected = users.find(user => user.id === Number(id))
+    res.json(userSelected)
+})
+
+app.post('/api/users', (req,res) => {
+    console.log(req.body);
+    const userAdded = req.body;
+    users.push(userAdded);  // copia solo nell'array ma non nel file users.js perché sono dati non persistenti
+    res.status(200).json({success:true,data:users})
+})
+
+app.put('/api/users/:id', (req,res) => {
+    const {id} = req.params;
+    const userSelected = req.body;
+    users[Number(id)-1] = userSelected;
+    res.status(200).json({success:true,data:users})
+})
+
+app.delete('/api/users/:id', (req,res) => {
+    const {id} = req.params;
+    const index = users.findIndex(user => user.id === Number(id))
+    users.splice(index,1);
+    res.status(200).json({success:true,data:users})
 })
 
 app.all('*',(req,res)=>{
